@@ -1,0 +1,25 @@
+apply plugin: 'findbugs'
+
+findbugs {
+    toolVersion = "3.0.1"
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "medium"
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = true
+        html.enabled = false
+        xml.withMessages = true
+    }
+}
+
+tasks.create(name: "findbugsMainHtml", dependsOn: findbugsMain) << {
+    String reportDir = "$reporting.baseDir/findbugs"
+    File inputFile = new File(reportDir, "main.xml")
+    File outputFile = new File(reportDir, "main.html")
+    File xslStyleFile = new File(new File(rootDir, 'config'), "findbugs.xsl")
+    ant.xslt(in: inputFile, style: xslStyleFile, out: outputFile)
+}

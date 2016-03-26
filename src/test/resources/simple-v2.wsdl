@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tns="http://producers.emta.xtee.riik.ee/producer/emta"
+        xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ompi"
+        targetNamespace="http://producers.emta.xtee.riik.ee/producer/emta">
+    <wsdl:types>
+        <xsd:schema targetNamespace="http://producers.emta.xtee.riik.ee/producer/emta">
+            <xsd:import namespace="http://x-tee.riik.ee/xsd/xtee.xsd"
+                    schemaLocation="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+
+            <xsd:complexType name="OmpiAndmedSisend">
+                <xsd:sequence>
+                    <xsd:element name="id" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <xtee:title>Alates ID-st</xtee:title>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="OmpiAndmedValjund">
+                <xsd:sequence>
+                    <xsd:element name="rida" minOccurs="0" maxOccurs="unbounded" nillable="true">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="perenimi" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>Perekonnanimi</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="eesnimi" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>Eesnimed</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="isikukood" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>Isikukood</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="synnikuupaev" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>Synnikuupaev</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="piirangu-lopp" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>Piirangu lopp</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                                <xsd:element name="id" type="xsd:string">
+                                    <xsd:annotation>
+                                        <xsd:appinfo>
+                                            <xtee:title>ID</xtee:title>
+                                        </xsd:appinfo>
+                                    </xsd:annotation>
+                                </xsd:element>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+
+            <xsd:complexType name="exception">
+                <xsd:sequence>
+                    <xsd:element name="trace" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <xtee:title>Vea kirjedus</xtee:title>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </wsdl:types>
+
+    <wsdl:message name="OmpiAndmedSisend">
+        <wsdl:part name="keha" type="tns:OmpiAndmedSisend"/>
+    </wsdl:message>
+    <wsdl:message name="OmpiAndmedValjund">
+        <wsdl:part name="paring" type="tns:OmpiAndmedSisend"/>
+        <wsdl:part name="keha" type="tns:OmpiAndmedValjund"/>
+    </wsdl:message>
+    <wsdl:message name="BusinessException">
+        <wsdl:part name="faultcode" type="xsd:string"/>
+        <wsdl:part name="exception" type="tns:exception"/>
+    </wsdl:message>
+    <wsdl:message name="standardpais">
+        <wsdl:part name="asutus" element="xtee:asutus"/>
+        <wsdl:part name="andmekogu" element="xtee:andmekogu"/>
+        <wsdl:part name="isikukood" element="xtee:isikukood"/>
+        <wsdl:part name="id" element="xtee:id"/>
+        <wsdl:part name="nimi" element="xtee:nimi"/>
+        <wsdl:part name="toimik" element="xtee:toimik"/>
+    </wsdl:message>
+
+    <wsdl:portType name="ompiPort">
+        <wsdl:operation name="OmpiAndmed">
+            <wsdl:documentation>
+                <xtee:title>Õnnemängu mängimise piirangu nimekiri</xtee:title>
+                <xtee:actiontitle>Paring</xtee:actiontitle>
+            </wsdl:documentation>
+            <wsdl:input message="tns:OmpiAndmedSisend"/>
+            <wsdl:output message="tns:OmpiAndmedValjund"/>
+            <wsdl:fault message="tns:BusinessException" name="BusinessException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="ompiBind" type="tns:ompiPort">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="OmpiAndmed">
+            <soap:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <wsdl:input>
+                <soap:header message="tns:standardpais" part="asutus" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="andmekogu" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="isikukood" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="id" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="nimi" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="toimik" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://producers.emta.xtee.riik.ee/producer/emta"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header message="tns:standardpais" part="asutus" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="andmekogu" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="isikukood" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="id" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="nimi" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:header message="tns:standardpais" part="toimik" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+                <soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://producers.emta.xtee.riik.ee/producer/emta"/>
+            </wsdl:output>
+            <wsdl:fault name="BusinessException">
+                <soap:fault name="BusinessException" use="encoded"
+                        encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                        namespace="http://producers.emta.xtee.riik.ee/producer/emta"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="ompiXtee">
+        <wsdl:port binding="tns:ompiBind" name="ompiXteePort">
+            <soap:address location="http://TURVASERVER/cgi-bin/consumer_proxy/"/>
+            <xtee:title>Maksu- ja Tolliameti X-tee teenused</xtee:title>
+            <xtee:address producer="emta"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

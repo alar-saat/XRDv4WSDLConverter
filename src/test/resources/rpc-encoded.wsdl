@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://producers.emta.xtee.riik.ee/producer/emta"
+                  xmlns:xtee="http://x-tee.riik.ee/xsd/xtee.xsd" targetNamespace="http://producers.emta.xtee.riik.ee/producer/emta">
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://producers.emta.xtee.riik.ee/producer/emta">
+            <import namespace="http://x-tee.riik.ee/xsd/xtee.xsd" schemaLocation="http://x-tee.riik.ee/xsd/xtee.xsd"/>
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/" schemaLocation="http://schemas.xmlsoap.org/soap/encoding/"/>
+
+            <!-- Service 1 request/response -->
+            <complexType name="service1RequestType">
+                <sequence>
+                    <element name="arg1" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>First argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                    <element name="arg2" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>Second argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="service1ResponseType">
+                <sequence>
+                    <element name="result" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>Result data</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                </sequence>
+            </complexType>
+
+            <!-- Service 2 request/response -->
+            <complexType name="service2RequestType">
+                <sequence>
+                    <element name="arg1" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>First argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                    <element name="arg2" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>Second argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="service2ResponseType">
+                <sequence>
+                    <element name="result" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>Result data</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                </sequence>
+            </complexType>
+
+            <!-- Service 3 request/response -->
+            <complexType name="service3RequestType">
+                <sequence>
+                    <element name="arg1" type="string">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>First argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                    <element name="arg2" type="tns:code">
+                        <annotation>
+                            <appinfo>
+                                <xtee:title>Second argument</xtee:title>
+                            </appinfo>
+                        </annotation>
+                    </element>
+                </sequence>
+                <attribute ref="tns:baseAttribute" use="required"/>
+            </complexType>
+            <simpleType name="code">
+                <restriction base="string">
+                    <length value="4"/>
+                </restriction>
+            </simpleType>
+            <attribute name="baseAttribute" type="tns:baseAttributeType"/>
+            <simpleType name="baseAttributeType">
+                <restriction base="int">
+                    <minInclusive value="1"/>
+                    <maxInclusive value="9"/>
+                </restriction>
+            </simpleType>
+            <complexType name="service3ResponseType">
+                <sequence>
+                    <element ref="tns:goods"/>
+                </sequence>
+            </complexType>
+            <element name="goods" type="tns:service3GoodsNode"/>
+            <complexType name="service3GoodsNode">
+                <complexContent>
+                    <extension base="tns:goodsNode">
+                        <sequence>
+                            <element minOccurs="0" name="commodityCode" type="string"/>
+                            <element maxOccurs="unbounded" minOccurs="0" name="footnoteCodes" nillable="true"
+                                     type="string"/>
+                            <element minOccurs="0" name="measureAttachable" type="boolean"/>
+                            <element minOccurs="0" name="productLineSuffix" type="string"/>
+                            <element minOccurs="0" name="statisticalIndicator" type="string"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <complexType abstract="true" name="goodsNode">
+                <complexContent>
+                    <extension base="tns:baseNode">
+                        <sequence>
+                            <element minOccurs="0" name="declarable" type="boolean"/>
+                            <element minOccurs="0" name="description" type="string"/>
+                            <element minOccurs="0" name="endDate" type="dateTime"/>
+                            <element minOccurs="0" name="indent" type="int"/>
+                            <element minOccurs="0" name="languageCode" type="string"/>
+                            <element minOccurs="0" name="nationalAbbreviation" type="string"/>
+                            <element minOccurs="0" name="sid" type="long"/>
+                            <element minOccurs="0" name="startDate" type="dateTime"/>
+                        </sequence>
+                    </extension>
+                </complexContent>
+            </complexType>
+            <complexType name="baseNode">
+                <sequence>
+                    <element minOccurs="0" name="national" type="boolean"/>
+                </sequence>
+            </complexType>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="service1">
+        <wsdl:part name="keha" type="tns:service1RequestType"/>
+    </wsdl:message>
+    <wsdl:message name="service1Response">
+        <wsdl:part name="paring" type="tns:service1RequestType"/>
+        <wsdl:part name="keha" type="tns:service1ResponseType"/>
+    </wsdl:message>
+    <wsdl:message name="service2">
+        <wsdl:part name="keha" type="tns:service2RequestType"/>
+    </wsdl:message>
+    <wsdl:message name="service2Response">
+        <wsdl:part name="paring" type="tns:service2RequestType"/>
+        <wsdl:part name="keha" type="tns:service2ResponseType"/>
+    </wsdl:message>
+    <wsdl:message name="service3">
+        <wsdl:part name="keha" type="tns:service3RequestType"/>
+    </wsdl:message>
+    <wsdl:message name="service3Response">
+        <wsdl:part name="paring" type="tns:service3RequestType"/>
+        <wsdl:part name="keha" type="tns:service3ResponseType"/>
+    </wsdl:message>
+    <wsdl:message name="xteehdr">
+        <wsdl:part element="xtee:asutus" name="asutus"/>
+        <wsdl:part element="xtee:andmekogu" name="andmekogu"/>
+        <wsdl:part element="xtee:isikukood" name="isikukood"/>
+        <wsdl:part element="xtee:id" name="id"/>
+        <wsdl:part element="xtee:nimi" name="nimi"/>
+        <wsdl:part element="xtee:toimik" name="toimik"/>
+    </wsdl:message>
+    <wsdl:portType name="servicesPortType">
+        <wsdl:operation name="service1">
+            <wsdl:documentation>
+                <xtee:title>Test service 1</xtee:title>
+            </wsdl:documentation>
+            <wsdl:input message="tns:service1"/>
+            <wsdl:output message="tns:service1Response"/>
+        </wsdl:operation>
+        <wsdl:operation name="service2">
+            <wsdl:documentation>
+                <xtee:title>Test service 2</xtee:title>
+            </wsdl:documentation>
+            <wsdl:input message="tns:service2"/>
+            <wsdl:output message="tns:service2Response"/>
+        </wsdl:operation>
+        <wsdl:operation name="service3">
+            <wsdl:documentation>
+                <xtee:title>Test service 3</xtee:title>
+            </wsdl:documentation>
+            <wsdl:input message="tns:service3"/>
+            <wsdl:output message="tns:service3Response"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="servicesBind" type="tns:servicesPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="service1">
+            <soap:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <wsdl:input>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="service2">
+            <soap:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <wsdl:input>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="service3">
+            <soap:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <wsdl:input>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="asutus" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="andmekogu" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="isikukood" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="id" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="nimi" use="encoded"/>
+                <soap:header encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" message="tns:xteehdr" namespace="http://x-tee.riik.ee/xsd/xtee.xsd" part="toimik" use="encoded"/>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://producers.emta.xtee.riik.ee/producer/emta" use="encoded"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="services">
+        <wsdl:port binding="tns:servicesBind" name="servicesPort">
+            <soap:address location="http://TURVASERVER/"/>
+            <xtee:title>Maksu- ja Tolliameti X-tee teenused</xtee:title>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

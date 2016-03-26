@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tns="http://emta-v6.x-road.eu" xmlns:xrd="http://x-road.eu/xsd/xroad.xsd"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  targetNamespace="http://emta-v6.x-road.eu">
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://emta-v6.x-road.eu">
+            <import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
+        </schema>
+    </wsdl:types>
+
+    <wsdl:message name="xrdHeader">
+        <wsdl:part name="client" element="xrd:client"/>
+        <wsdl:part name="service" element="xrd:service"/>
+        <wsdl:part name="id" element="xrd:id"/>
+        <wsdl:part name="userId" element="xrd:userId"/>
+        <wsdl:part name="issue" element="xrd:issue"/>
+        <wsdl:part name="protocolVersion" element="xrd:protocolVersion"/>
+    </wsdl:message>
+
+    <wsdl:portType name="webServiceInterface">
+    </wsdl:portType>
+
+    <wsdl:binding name="soapBindings" type="tns:webServiceInterface">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    </wsdl:binding>
+
+    <wsdl:service name="webService">
+        <wsdl:port name="port" binding="tns:soapBindings">
+            <soap:address location="http://SERVER_URL"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

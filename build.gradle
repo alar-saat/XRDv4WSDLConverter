@@ -1,0 +1,69 @@
+version = "1.0.0"
+group = "ee.rmit.xtee"
+
+apply plugin: "java"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+archivesBaseName = "xrd-wsdl-converter"
+
+compileJava {
+    options.encoding = "utf-8"
+    options.compilerArgs << "-Xlint:unchecked"
+}
+
+jar {
+    manifest {
+        attributes "Implementation-Title": "XRD V2V3ToV4 WSDL converter", "Implementation-Version": version
+    }
+}
+
+apply from: "$rootDir/gradle/junit.gradle"
+apply from: "$rootDir/gradle/findbugs.gradle"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.11'
+}
+
+task convertV2ToV4(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ee.rmit.xrd.XrdV2ToV4Converter"
+    def wsdlOutputDir = "$rootDir/wsdl"
+    def wsdlFileIn = "$wsdlOutputDir/emtav2.wsdl"
+    def useWrapperElements = "true"
+    def producerName = "emta-v6"
+    args = [wsdlOutputDir, wsdlFileIn, useWrapperElements, producerName].toList()
+}
+
+task convertV3ToV4(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ee.rmit.xrd.XrdV3ToV4Converter"
+    def wsdlOutputDir = "$rootDir/wsdl"
+    def wsdlFileIn = "$wsdlOutputDir/emtav3.wsdl"
+    def producerName = "emta-v6"
+    args = [wsdlOutputDir, wsdlFileIn, producerName].toList()
+}
+
+task extractServices(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ee.rmit.xrd.WsdlServiceExtractor"
+    def wsdlOutputDir = "$rootDir/wsdl"
+    def wsdlFileIn = "$wsdlOutputDir/xrd-v4.wsdl"
+    def services = "uploadMime*, downloadMime*"
+    args = [wsdlOutputDir, wsdlFileIn, services].toList()
+}
+
+task assembleServices(type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "ee.rmit.xrd.XrdV4WsdlAssembler"
+    def wsdlInputDir = "$rootDir/wsdl"
+    def wsdlTemplate = "$wsdlInputDir/emtav4.wsdl"
+    def wsdlFilesToAssemble = "services.wsdl"
+    def producerName = "emta-v6"
+    args = [wsdlInputDir, wsdlTemplate, wsdlFilesToAssemble, producerName].toList()
+}

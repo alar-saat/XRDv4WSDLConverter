@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tn="http://emtav5.x-road.ee/producer/"
+        xmlns:xtee="http://x-road.ee/xsd/x-road.xsd" xmlns:sp="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:mi="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://emtav5.x-road.ee/producer/">
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://emtav5.x-road.ee/producer/">
+            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.ee/xsd/x-road.xsd"/>
+
+            <xs:element name="napTeenusRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:napTeenusRequestType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="napTeenusRequestType">
+                <xs:sequence>
+                    <xs:element name="operatsioon" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <xtee:title>Operatsiooni nimi</xtee:title>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="data" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <xtee:title>XML ärisõnum NAP teenusele (CDATA)</xtee:title>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="napTeenusReqResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:napTeenusRequestType"/>
+                        <xs:element name="response" type="tn:napTeenusResponseType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="napTeenusResponseType">
+                <xs:sequence>
+                    <xs:choice>
+                        <xs:sequence>
+                            <xs:element name="tulem">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <xtee:title>OK vastus</xtee:title>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="OK"/>
+                                        <xs:enumeration value=""/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="data" type="xs:string">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <xtee:title>XML ärisõnum NAP teenuselt (CDATA)</xtee:title>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:sequence>
+                            <xs:element name="faultCode" type="xs:string">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <xtee:title>Veakood</xtee:title>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="faultString" type="xs:string">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <xtee:title>Vea kirjeldus</xtee:title>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="businessException" type="xs:string"/>
+        </xs:schema>
+    </types>
+
+    <message name="napTeenusRequest">
+        <part name="body" element="tn:napTeenusRequest"/>
+        <part name="file" type="xs:base64Binary"/>
+    </message>
+    <message name="napTeenusReqResponse">
+        <part name="body" element="tn:napTeenusReqResponse"/>
+        <part name="file1" type="xs:base64Binary"/>
+        <part name="file2" type="xs:base64Binary"/>
+    </message>
+    <message name="standardpais">
+        <part element="xtee:consumer" name="consumer"/>
+        <part element="xtee:unit" name="unit"/>
+        <part element="xtee:producer" name="producer"/>
+        <part element="xtee:userId" name="userId"/>
+        <part element="xtee:service" name="service"/>
+        <part element="xtee:id" name="id"/>
+        <part element="xtee:issue" name="issue"/>
+    </message>
+    <message name="businessException">
+        <part name="fault" element="tns:businessException"/>
+    </message>
+
+    <portType name="napPort">
+        <operation name="napTeenus">
+            <documentation>
+                <xtee:title>Nõuete edastamine NAPile (Nõuete Arvestuse Programm)</xtee:title>
+            </documentation>
+            <input message="tn:napTeenusRequest"/>
+            <output message="tn:napTeenusReqResponse"/>
+            <fault name="businessException" message="tn:businessException"/>
+        </operation>
+    </portType>
+
+    <binding name="napBind" type="tn:napPort">
+        <sp:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="napTeenus">
+            <sp:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <input>
+                <mi:multipartRelated>
+                    <mi:part>
+                        <sp:header message="tns:standardpais" part="consumer" use="literal"/>
+                        <sp:header message="tns:standardpais" part="producer" use="literal"/>
+                        <sp:header message="tns:standardpais" part="userId" use="literal"/>
+                        <sp:header message="tns:standardpais" part="id" use="literal"/>
+                        <sp:header message="tns:standardpais" part="service" use="literal"/>
+                        <sp:header message="tns:standardpais" part="unit" use="literal"/>
+                        <sp:header message="tns:standardpais" part="issue" use="literal"/>
+                        <sp:body use="literal"/>
+                    </mi:part>
+                    <mi:part>
+                        <mi:content part="file" type="application/octet-stream"/>
+                    </mi:part>
+                </mi:multipartRelated>
+            </input>
+            <output>
+                <mi:multipartRelated>
+                    <mi:part>
+                        <sp:header message="tns:standardpais" part="consumer" use="literal"/>
+                        <sp:header message="tns:standardpais" part="producer" use="literal"/>
+                        <sp:header message="tns:standardpais" part="userId" use="literal"/>
+                        <sp:header message="tns:standardpais" part="id" use="literal"/>
+                        <sp:header message="tns:standardpais" part="service" use="literal"/>
+                        <sp:header message="tns:standardpais" part="unit" use="literal"/>
+                        <sp:header message="tns:standardpais" part="issue" use="literal"/>
+                        <sp:body use="literal"/>
+                    </mi:part>
+                    <mi:part>
+                        <mi:content part="file1" type="application/octet-stream"/>
+                    </mi:part>
+                    <mi:part>
+                        <mi:content part="file2" type="application/octet-stream"/>
+                    </mi:part>
+                </mi:multipartRelated>
+            </output>
+            <fault name="businessException">
+                <sp:fault name="businessException" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+
+    <service name="napService">
+        <port binding="tn:napBind" name="napServicePort">
+            <sp:address location="http://TURVASERVER/cgi-bin/consumer_proxy/"/>
+            <xtee:title>Maksu- ja Tolliameti X-tee teenused</xtee:title>
+            <xtee:address producer="emta"/>
+        </port>
+    </service>
+</definitions>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://emta-v6.x-road.eu"
+                  xmlns:xrd="http://x-road.eu/xsd/xroad.xsd" targetNamespace="http://emta-v6.x-road.eu">
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://emta-v6.x-road.eu">
+            <import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
+            <element name="service3">
+                <complexType>
+                    <sequence>
+                        <element name="arg1" type="string">
+                            <annotation>
+                                <appinfo>
+                                    <xrd:title>First argument</xrd:title>
+                                </appinfo>
+                            </annotation>
+                        </element>
+                        <element name="arg2" type="string">
+                            <annotation>
+                                <appinfo>
+                                    <xrd:title>Second argument</xrd:title>
+                                </appinfo>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="service3Response">
+                <complexType>
+                    <sequence>
+                        <element name="result" type="string">
+                            <annotation>
+                                <appinfo>
+                                    <xrd:title>Result data</xrd:title>
+                                </appinfo>
+                            </annotation>
+                        </element>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="service3">
+        <wsdl:part element="tns:service3" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="service3Response">
+        <wsdl:part element="tns:service3Response" name="parameters"/>
+    </wsdl:message>
+    <wsdl:message name="xrdHeader">
+        <wsdl:part element="xrd:client" name="client"/>
+        <wsdl:part element="xrd:service" name="service"/>
+        <wsdl:part element="xrd:id" name="id"/>
+        <wsdl:part element="xrd:userId" name="userId"/>
+        <wsdl:part element="xrd:issue" name="issue"/>
+        <wsdl:part element="xrd:protocolVersion" name="protocolVersion"/>
+    </wsdl:message>
+    <wsdl:portType name="service3PortType">
+        <wsdl:operation name="service3">
+            <wsdl:documentation>
+                <xrd:title>Test service</xrd:title>
+            </wsdl:documentation>
+            <wsdl:input message="tns:service3"/>
+            <wsdl:output message="tns:service3Response"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="service3Bind" type="tns:service3PortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="service3">
+            <soap:operation soapAction=""/>
+            <xrd:version>v1</xrd:version>
+            <wsdl:input>
+                <soap:header message="tns:xrdHeader" part="client" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="service" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="id" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="protocolVersion" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:header message="tns:xrdHeader" part="client" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="service" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="id" use="literal"/>
+                <soap:header message="tns:xrdHeader" part="protocolVersion" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="service3">
+        <wsdl:port binding="tns:service3Bind" name="service3Port">
+            <soap:address location="http://TURVASERVER/"/>
+            <xrd:title>Maksu- ja Tolliameti X-tee teenused</xrd:title>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

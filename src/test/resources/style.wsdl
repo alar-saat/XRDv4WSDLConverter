@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tn="http://emta-v6.x-road.eu"
+        xmlns:xtee="http://x-road.eu/xsd/xroad.xsd" xmlns:sp="http://schemas.xmlsoap.org/wsdl/soap/"
+        xmlns:mi="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://emta-v6.x-road.eu"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://emta-v6.x-road.eu">
+            <xs:import namespace="http://x-road.eu/xsd/xroad.xsd" schemaLocation="http://x-road.eu/xsd/xroad.xsd"/>
+
+            <xs:element name="uploadRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:fileType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="fileType">
+                <xs:sequence>
+                    <xs:element name="file" type="xs:string">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <xtee:title>Faili nimi</xtee:title>
+                            </xs:appinfo>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="uploadRequestResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:fileType"/>
+                        <xs:element name="response" type="tn:statusType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:complexType name="statusType">
+                <xs:sequence>
+                    <xs:element name="status">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <xtee:title>(N)OK vastus</xtee:title>
+                            </xs:appinfo>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:enumeration value="OK"/>
+                                <xs:enumeration value="NOK"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="downloadRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:fileType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="downloadRequestResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="request" type="tn:fileType"/>
+                        <xs:element name="response" type="tn:statusType"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </types>
+
+    <message name="uploadRequest">
+        <part name="body" element="tn:uploadRequest"/>
+        <part name="file" type="xs:base64Binary"/>
+    </message>
+    <message name="uploadRequestResponse">
+        <part name="body" element="tn:uploadRequestResponse"/>
+    </message>
+    <message name="downloadRequest">
+        <part name="body" element="tn:downloadRequest"/>
+    </message>
+    <message name="downloadRequestResponse">
+        <part name="body" element="tn:downloadRequestResponse"/>
+        <part name="file" type="xs:base64Binary"/>
+    </message>
+    <message name="standardpais">
+        <part name="clientv6" element="xtee:client"/>
+        <part name="servicev6" element="xtee:service"/>
+        <part name="idv6" element="xtee:id"/>
+        <part name="userIdv6" element="xtee:userId"/>
+        <part name="protocolVersionv6" element="xtee:protocolVersion"/>
+        <part name="issuev6" element="xtee:issue"/>
+    </message>
+
+    <portType name="mimePort">
+        <operation name="upload">
+            <documentation>
+                <xtee:title>Upload teenus</xtee:title>
+            </documentation>
+            <input message="tn:uploadRequest"/>
+            <output message="tn:uploadRequestResponse"/>
+        </operation>
+        <operation name="download">
+            <documentation>
+                <xtee:title>Download teenus</xtee:title>
+            </documentation>
+            <input message="tn:downloadRequest"/>
+            <output message="tn:downloadRequestResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="mimeBind" type="tn:mimePort">
+        <sp:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="upload">
+            <sp:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <input>
+                <mi:multipartRelated>
+                    <mi:part name="soap">
+                        <sp:header message="tn:standardpais" part="clientv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="servicev6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="userIdv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="idv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="protocolVersionv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="issuev6" use="literal"/>
+                        <sp:body parts="body" use="literal"/>
+                    </mi:part>
+                    <mi:part name="file">
+                        <mi:content part="file" type="application/octet-stream"/>
+                    </mi:part>
+                </mi:multipartRelated>
+            </input>
+            <output>
+                <sp:header message="tn:standardpais" part="clientv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="servicev6" use="literal"/>
+                <sp:header message="tn:standardpais" part="userIdv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="idv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="protocolVersionv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="issuev6" use="literal"/>
+                <sp:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="download">
+            <sp:operation soapAction=""/>
+            <xtee:version>v1</xtee:version>
+            <input>
+                <sp:header message="tn:standardpais" part="clientv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="servicev6" use="literal"/>
+                <sp:header message="tn:standardpais" part="userIdv6" use="literal"/>
+                <sp:header message="tn:standardpais" part="protocolVersionv6" use="literal"/>
+                <sp:body use="literal"/>
+            </input>
+            <output>
+                <mi:multipartRelated>
+                    <mi:part name="soap">
+                        <sp:header message="tn:standardpais" part="clientv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="servicev6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="userIdv6" use="literal"/>
+                        <sp:header message="tn:standardpais" part="protocolVersionv6" use="literal"/>
+                        <sp:body parts="body" use="literal"/>
+                    </mi:part>
+                    <mi:part name="file">
+                        <mi:content part="file" type="application/octet-stream"/>
+                    </mi:part>
+                </mi:multipartRelated>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="mimeService">
+        <port binding="tn:mimeBind" name="mimeServicePort">
+            <sp:address location="http://TURVASERVER/"/>
+            <xtee:title>Maksu- ja Tolliameti X-tee teenused</xtee:title>
+        </port>
+    </service>
+</definitions>
