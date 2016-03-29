@@ -104,7 +104,7 @@
             </wsdl:input>
             <wsdl:output>
                 <mime:multipartRelated>
-                    <mime:part name="soap">
+                    <mime:part>
                         <soap:header message="tns:xrdHeader" part="client" use="literal"/>
                         <soap:header message="tns:xrdHeader" part="service" use="literal"/>
                         <soap:header message="tns:xrdHeader" part="id" use="literal"/>
@@ -112,7 +112,7 @@
                         <soap:header message="tns:xrdHeader" part="userId" use="literal"/>
                         <soap:body parts="parameters" use="literal"/>
                     </mime:part>
-                    <mime:part name="attachment">
+                    <mime:part>
                         <mime:content part="attachment" type="application/octet-stream"/>
                     </mime:part>
                 </mime:multipartRelated>

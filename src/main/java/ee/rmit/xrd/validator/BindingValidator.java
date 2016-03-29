@@ -188,7 +188,7 @@ public class BindingValidator extends AbstractValidator {
             List<Element> parts = getRequiredChildElements(MIME_PART, multipartRelated);
             //first part must be soap envelope
             Element soapPart = parts.get(0);
-            checkRequiredAttributes(soapPart, "name");
+            //checkRequiredAttributes(soapPart, "name"); //[WS-I] R2908 The mime:part element in a DESCRIPTION MUST NOT have a name attribute.
             validateSoapPart(soapPart);
             Element body = getRequiredChildElement(SOAP_BODY, soapPart);
             String partsValue = getRequiredAttributeValue("parts", body);
@@ -198,7 +198,7 @@ public class BindingValidator extends AbstractValidator {
                 throw new IllegalStateException("'multipartRelated' without an attachment part");
             }
             parts.subList(1, parts.size()).forEach(elem -> {
-                checkRequiredAttributes(elem, "name");
+                //checkRequiredAttributes(elem, "name"); //[WS-I] R2908 The mime:part element in a DESCRIPTION MUST NOT have a name attribute.
                 Element content = getRequiredChildElement(MIME_CONTENT, elem);
                 checkRequiredAttributes(content, "part", "type");
                 String partValue = getRequiredAttributeValue("part", content);

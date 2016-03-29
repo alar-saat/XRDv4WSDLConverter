@@ -132,7 +132,7 @@ public abstract class AbstractConverter {
         } else {
             Element multipartRelated = createMultipartRelated(origElement.getLocalName(), origMultipartRelated, doc);
             List<Element> parts = getRequiredChildElements(MIME_PART, multipartRelated);
-            Element soapPart = getRequiredSoapPartInMultipart("soap", parts);
+            Element soapPart = getEmptyPartInMultipart(parts);
             header.forEach(soapPart::appendChild);
             Element soapBody = doc.createElementNS(SOAP_NS.getNamespaceURI(), SOAP_NS.getPrefix() + ":body");
             soapBody.setAttribute("use", "literal");
@@ -216,7 +216,7 @@ public abstract class AbstractConverter {
         Element multipartRelated = doc.createElementNS(MIME_NS.getNamespaceURI(), MIME_NS.getPrefix() + ":multipartRelated");
 
         Element soapPart = doc.createElementNS(MIME_NS.getNamespaceURI(), MIME_NS.getPrefix() + ":part");
-        soapPart.setAttribute("name", "soap");
+        //soapPart.setAttribute("name", "soap"); //[WS-I] R2908 The mime:part element in a DESCRIPTION MUST NOT have a name attribute.
         multipartRelated.appendChild(soapPart);
 
         List<Element> origParts = getRequiredChildElements(MIME_PART, origMultipartRelated);
@@ -238,7 +238,7 @@ public abstract class AbstractConverter {
                 if (origParts.size() > 2) {
                     name += ++index;
                 }
-                attachmentPart.setAttribute("name", name);
+                //attachmentPart.setAttribute("name", name); //[WS-I] R2908 The mime:part element in a DESCRIPTION MUST NOT have a name attribute.
                 content.setAttribute("part", name);
                 String type = getAttributeValueOrNull("type", content);
                 if (type == null) {
@@ -252,13 +252,13 @@ public abstract class AbstractConverter {
         return multipartRelated;
     }
 
-    private Element getRequiredSoapPartInMultipart(String soapPartName, List<Element> parts) {
+    private Element getEmptyPartInMultipart(List<Element> parts) {
         Optional<Element> partHolder =
-                parts.stream().filter(elem -> getRequiredAttributeValue("name", elem).equals(soapPartName)).findFirst();
+                parts.stream().filter(elem -> !elem.hasChildNodes()).findFirst();
         if (partHolder.isPresent()) {
             return partHolder.get();
         }
-        throw new IllegalStateException(String.format("Required SOAP part '%s' in multipart/related not found", soapPartName));
+        throw new IllegalStateException("Required empty part in multipart/related not found");
     }
 
     private Element createSoapFaultInBinding(Element origFault, Document doc) {
