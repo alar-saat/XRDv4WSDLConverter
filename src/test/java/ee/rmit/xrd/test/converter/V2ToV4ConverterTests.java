@@ -110,13 +110,14 @@ public class V2ToV4ConverterTests extends AbstractWsdlValidator {
         Element input = getRequiredChildElement(WSDL_INPUT, operation);
         Element multipart = getRequiredChildElement(MIME_MULTIPART, input);
         List<Element> parts = getRequiredChildElements(MIME_PART, multipart);
-        validateMimePartByName("soap", parts);
-        validateMimePartByName("attachment", parts);
+        //[WS-I] R2908 The mime:part element in a DESCRIPTION MUST NOT have a name attribute.
+        //validateMimePartByName("soap", parts);
+        //validateMimePartByName("attachment", parts);
 
         Element output = getRequiredChildElement(WSDL_OUTPUT, operation);
         multipart = getRequiredChildElement(MIME_MULTIPART, output);
         parts = getRequiredChildElements(MIME_PART, multipart);
-        validateMimePartByName("soap", parts);
-        validateMimePartByName("attachment", parts);
+        //validateMimePartByName("soap", parts);
+        //validateMimePartByName("attachment", parts);
     }
 }
