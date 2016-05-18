@@ -1,5 +1,5 @@
 # Üldine
-- Ehitustarkvara: [Gradle 2.9](http://gradle.org/gradle-download/) 
+- Ehitustarkvara: [Gradle 2](http://gradle.org/gradle-download/) 
 - Java versioon: [Java SE Development Kit 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - X-tee: [infosüsteemide andmevahetuskiht X-tee](https://www.ria.ee/ee/x-tee.html)
 - X-tee v6: [üleminek X-tee versioonile 6](https://www.ria.ee/ee/uleminek-x-tee-versioonile-6.html)
