@@ -59,7 +59,7 @@ Häälestamiseks on järgmised parameetrid,
 3. useWrapperElements - true|false, 'true' korral lisatakse 'keha/paring' wrapper elemendid
 4. producerName - teenusepakkuja nimi. Kasutatakse nimeruumi koostamisel, näiteks emta-v6: 'http://emta-v6.x-road.eu'
 
-Järgnev näide loeb v2 dokumendi aadressilt http://vinski.mta:9001/xtee-router/emta?WSDL ja salvestab konvertimise tulemuse
+Järgnev näide loeb v2 dokumendi aadressilt http://hostname/webservice?WSDL ja salvestab konvertimise tulemuse
 failisüsteemi /tmp/xrd-v4.wsdl. 'keha/paring' wrapper elemente ei kasutata. Teenusepakkuja nimeruum 'http://emta-v6.x-road.eu'
 
 ```gradle
@@ -67,7 +67,7 @@ task convertV2ToV4(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "ee.rmit.xrd.XrdV2ToV4Converter"
     def wsdlOutputDir = "/tmp"
-    def wsdlFileIn = "http://vinski.mta:9001/xtee-router/emta?WSDL"
+    def wsdlFileIn = "http://hostname/webservice?WSDL"
     def useWrapperElements = "false"
     def producerName = "emta-v6"
     args = [wsdlOutputDir, wsdlFileIn, useWrapperElements, producerName].toList()
@@ -127,7 +127,7 @@ Templateks võib olla ka teenustega WSDL. Failisüsteem: '/tmp/v4-template.wsdl'
 ainult üks fail: wsdlFilesToAssemble='services.wsdl', kaks faili: wsdlFilesToAssemble='{service1,service2}.wsdl'
 4. producerName - teenusepakkuja nimi. Kasutatakse nimeruumi koostamisel, näiteks emta-v6: 'http://emta-v6.x-road.eu'
 
-Järgnev näide loeb v4 koonddokumendi aadressilt http://vinski.mta:9001/xtee-router/emtav4?WSDL ja liidab sellele uued teenused failist 
+Järgnev näide loeb v4 koonddokumendi aadressilt http://hostname/webservicev4?WSDL ja liidab sellele uued teenused failist 
 /tmp/wsdl/services.wsdl. Teenusepakkuja nimeruum 'http://emta-v6.x-road.eu'
 
 ```gradle
@@ -135,7 +135,7 @@ task assembleServices(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "ee.rmit.xrd.XrdV4WsdlAssembler"
     def wsdlInputDir = "/tmp/wsdl"
-    def wsdlTemplate = "http://vinski.mta:9001/xtee-router/emtav4?WSDL"
+    def wsdlTemplate = "http://hostname/webservicev4?WSDL"
     def wsdlFilesToAssemble = "services.wsdl"
     def producerName = "emta-v6"
     args = [wsdlInputDir, wsdlTemplate, wsdlFilesToAssemble, producerName].toList()
